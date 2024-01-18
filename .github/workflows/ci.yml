@@ -1,12 +1,12 @@
-name: Build Drivechain Launcher Project
+name: Build Godot Project
 
 on:
-  pull_request:
   push:
     branches:
-      - '**'
-    tags-ignore:
-      - '**'
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   build:
@@ -14,14 +14,17 @@ jobs:
       matrix:
         include:
           - os: ubuntu-latest
+            godot_executable: "Godot_v4.2.1-stable_linux.x86_64"
             godot_url: https://github.com/godotengine/godot/releases/download/4.2.1-stable/Godot_v4.2.1-stable_linux.x86_64.zip
             platform: "Linux/X11"
             extension: "x86_64"
           - os: macos-latest
+            godot_executable: "Godot_v4.2.1-stable_macos.universal"
             godot_url: https://github.com/godotengine/godot/releases/download/4.2.1-stable/Godot_v4.2.1-stable_macos.universal.zip
             platform: "Mac OS X"
             extension: "dmg"
           - os: windows-latest
+            godot_executable: "Godot_v4.2.1-stable_win64.exe"
             godot_url: https://github.com/godotengine/godot/releases/download/4.2.1-stable/Godot_v4.2.1-stable_win64.exe.zip
             platform: "Windows Desktop"
             extension: "exe"
@@ -39,13 +42,14 @@ jobs:
 
     - name: Export Project
       run: |
-        if [ ${{ matrix.os }} != 'windows-latest' ]; then
-          chmod +x ./Godot_v4.2.1-stable_${{ matrix.platform }}.64
+        if [ "${{ matrix.os }}" != "windows-latest" ]; then
+          chmod +x ./${{ matrix.godot_executable }}
         fi
-        ./Godot_v4.2.1-stable_${{ matrix.platform }}.64 --export "${{ matrix.platform }}" drivechain.${{ matrix.extension }}
+        ls
+        ./${{ matrix.godot_executable }} --export "${{ matrix.platform }}" mygame.${{ matrix.extension }}
 
     - name: Upload Artifacts
       uses: actions/upload-artifact@v2
       with:
-        name: drivechain-${{ matrix.platform }}
-        path: drivechain.${{ matrix.extension }}
+        name: drivechain_launcher-${{ matrix.platform }}
+        path: drivechain_launcher.${{ matrix.extension }}
