@@ -3,10 +3,10 @@ name: Build Drivechain Launcher Project
 on:
   push:
     branches:
-      - main
+      - **
   pull_request:
     branches:
-      - main
+      - **
 
 jobs:
   build:
