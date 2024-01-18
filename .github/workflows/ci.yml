@@ -1,0 +1,50 @@
+name: Build Drivechain Launcher Project
+
+on:
+  push:
+    branches:
+      - '**'
+    tags-ignore:
+      - '**'
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        include:
+          - os: ubuntu-latest
+            godot_version: "3.4.2"
+            platform: "X11"
+          - os: macos-latest
+            godot_version: "3.4.2"
+            platform: "Mac OS X"
+          - os: windows-latest
+            godot_version: "3.4.2"
+            platform: "Windows Desktop"
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Download Godot
+      run: |
+        wget https://downloads.tuxfamily.org/godotengine/${{ matrix.godot_version }}/Godot_v${{ matrix.godot_version }}-stable_${{ matrix.platform }}.zip
+        unzip Godot_v${{ matrix.godot_version }}-stable_${{ matrix.platform }}.zip
+
+    - name: Export Project
+      run: |
+        chmod +x ./Godot_v${{ matrix.godot_version }}-stable_${{ matrix.platform }}.64  # Only needed for Linux and macOS
+        ./Godot_v${{ matrix.godot_version }}-stable_${{ matrix.platform }}.64 --export "${{ matrix.platform }}" drivechain_launcher.${{ matrix.platform == 'X11' && 'x86_64' || matrix.platform == 'Mac OS X' && 'dmg' || matrix.platform == 'Windows Desktop' && 'exe' }}
+
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: drivechain_launcher-${{ matrix.platform }}
+        path: drivechain_launcher.${{ matrix.platform == 'X11' && 'x86_64' || matrix.platform == 'Mac OS X' && 'dmg' || matrix.platform == 'Windows Desktop' && 'exe' }}
+
