@@ -42,10 +42,10 @@ jobs:
         if [ ${{ matrix.os }} != 'windows-latest' ]; then
           chmod +x ./Godot_v4.2.1-stable_${{ matrix.platform }}.64
         fi
-        ./Godot_v4.2.1-stable_${{ matrix.platform }}.64 --export "${{ matrix.platform }}" mygame.${{ matrix.extension }}
+        ./Godot_v4.2.1-stable_${{ matrix.platform }}.64 --export "${{ matrix.platform }}" drivechain.${{ matrix.extension }}
 
     - name: Upload Artifacts
       uses: actions/upload-artifact@v2
       with:
-        name: mygame-${{ matrix.platform }}
-        path: mygame.${{ matrix.extension }}
+        name: drivechain-${{ matrix.platform }}
+        path: drivechain.${{ matrix.extension }}
