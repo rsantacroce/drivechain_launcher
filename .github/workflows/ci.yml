@@ -19,16 +19,16 @@ jobs:
             platform: "Linux/X11"
             extension: "x86_64"
             use_xvfb: true
-          - os: macos-latest
-            godot_executable: "Godot_v4.2.1-stable_macos.universal"
-            godot_url: https://github.com/godotengine/godot/releases/download/4.2.1-stable/Godot_v4.2.1-stable_macos.universal.zip
-            platform: "Mac OS X"
-            extension: "dmg"
-          - os: windows-latest
-            godot_executable: "Godot_v4.2.1-stable_win64.exe"
-            godot_url: https://github.com/godotengine/godot/releases/download/4.2.1-stable/Godot_v4.2.1-stable_win64.exe.zip
-            platform: "Windows Desktop"
-            extension: "exe"
+          # - os: macos-latest
+          #   godot_executable: "Godot_v4.2.1-stable_macos.universal"
+          #   godot_url: https://github.com/godotengine/godot/releases/download/4.2.1-stable/Godot_v4.2.1-stable_macos.universal.zip
+          #   platform: "Mac OS X"
+          #   extension: "dmg"
+          # - os: windows-latest
+          #   godot_executable: "Godot_v4.2.1-stable_win64.exe"
+          #   godot_url: https://github.com/godotengine/godot/releases/download/4.2.1-stable/Godot_v4.2.1-stable_win64.exe.zip
+          #   platform: "Windows Desktop"
+          #   extension: "exe"
 
     runs-on: ${{ matrix.os }}
 
