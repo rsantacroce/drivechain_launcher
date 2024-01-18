@@ -46,7 +46,7 @@ jobs:
           chmod +x ./${{ matrix.godot_executable }}
         fi
         ls
-        ./${{ matrix.godot_executable }} --export-release "${{ matrix.platform }}" drivehcain_launcher.${{ matrix.extension }}
+        ./${{ matrix.godot_executable }} --export-release "${{ matrix.platform }}" drivehcain_launcher.${{ matrix.extension }} --video-driver GLES2
 
     - name: Upload Artifacts
       uses: actions/upload-artifact@v2
