@@ -3,9 +3,7 @@ name: Build Drivechain Launcher Project
 on:
   push:
     branches:
-      - '**'
-    tags-ignore:
-      - '**'
+      - main
   pull_request:
     branches:
       - main
@@ -14,17 +12,19 @@ jobs:
   build:
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
         include:
           - os: ubuntu-latest
-            godot_version: "3.4.2"
-            platform: "X11"
+            godot_url: https://github.com/godotengine/godot/releases/download/4.2.1-stable/Godot_v4.2.1-stable_linux.x86_64.zip
+            platform: "Linux/X11"
+            extension: "x86_64"
           - os: macos-latest
-            godot_version: "3.4.2"
+            godot_url: https://github.com/godotengine/godot/releases/download/4.2.1-stable/Godot_v4.2.1-stable_macos.universal.zip
             platform: "Mac OS X"
+            extension: "dmg"
           - os: windows-latest
-            godot_version: "3.4.2"
+            godot_url: https://github.com/godotengine/godot/releases/download/4.2.1-stable/Godot_v4.2.1-stable_win64.exe.zip
             platform: "Windows Desktop"
+            extension: "exe"
 
     runs-on: ${{ matrix.os }}
 
@@ -32,19 +32,20 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
 
-    - name: Download Godot
+    - name: Download and Extract Godot
       run: |
-        wget https://downloads.tuxfamily.org/godotengine/${{ matrix.godot_version }}/Godot_v${{ matrix.godot_version }}-stable_${{ matrix.platform }}.zip
-        unzip Godot_v${{ matrix.godot_version }}-stable_${{ matrix.platform }}.zip
+        wget ${{ matrix.godot_url }}
+        unzip *.zip
 
     - name: Export Project
       run: |
-        chmod +x ./Godot_v${{ matrix.godot_version }}-stable_${{ matrix.platform }}.64  # Only needed for Linux and macOS
-        ./Godot_v${{ matrix.godot_version }}-stable_${{ matrix.platform }}.64 --export "${{ matrix.platform }}" drivechain_launcher.${{ matrix.platform == 'X11' && 'x86_64' || matrix.platform == 'Mac OS X' && 'dmg' || matrix.platform == 'Windows Desktop' && 'exe' }}
+        if [ ${{ matrix.os }} != 'windows-latest' ]; then
+          chmod +x ./Godot_v4.2.1-stable_${{ matrix.platform }}.64
+        fi
+        ./Godot_v4.2.1-stable_${{ matrix.platform }}.64 --export "${{ matrix.platform }}" mygame.${{ matrix.extension }}
 
     - name: Upload Artifacts
       uses: actions/upload-artifact@v2
       with:
-        name: drivechain_launcher-${{ matrix.platform }}
-        path: drivechain_launcher.${{ matrix.platform == 'X11' && 'x86_64' || matrix.platform == 'Mac OS X' && 'dmg' || matrix.platform == 'Windows Desktop' && 'exe' }}
-
+        name: mygame-${{ matrix.platform }}
+        path: mygame.${{ matrix.extension }}
