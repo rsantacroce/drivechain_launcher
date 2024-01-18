@@ -46,7 +46,7 @@ jobs:
           chmod +x ./${{ matrix.godot_executable }}
         fi
         ls
-        ./${{ matrix.godot_executable }} --export "${{ matrix.platform }}" mygame.${{ matrix.extension }}
+        ./${{ matrix.godot_executable }} --export-release "${{ matrix.platform }}" drivehcain_launcher.${{ matrix.extension }}
 
     - name: Upload Artifacts
       uses: actions/upload-artifact@v2
