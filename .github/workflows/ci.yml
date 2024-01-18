@@ -18,6 +18,7 @@ jobs:
             godot_url: https://github.com/godotengine/godot/releases/download/4.2.1-stable/Godot_v4.2.1-stable_linux.x86_64.zip
             platform: "Linux/X11"
             extension: "x86_64"
+            use_xvfb: true
           - os: macos-latest
             godot_executable: "Godot_v4.2.1-stable_macos.universal"
             godot_url: https://github.com/godotengine/godot/releases/download/4.2.1-stable/Godot_v4.2.1-stable_macos.universal.zip
@@ -39,6 +40,14 @@ jobs:
       run: |
         wget ${{ matrix.godot_url }}
         unzip *.zip
+        
+    - name: Setup Xvfb
+      if: matrix.use_xvfb
+      run: |
+        sudo apt-get update -y
+        sudo apt-get install -y xvfb
+        Xvfb :99 & 
+        export DISPLAY=:99
 
     - name: Export Project
       run: |
